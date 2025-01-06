@@ -61,10 +61,10 @@ https://dashboard.shareus.io/
 # TRUE for yes FALSE if no 
 USE_SHORTLINK = True if os.environ.get('USE_SHORTLINK', "TRUE") == "TRUE" else False 
 # only shareus service known rightnow rest you can test on your own
-SHORTLINK_API_URL = os.environ.get("SHORTLINK_API_URL", "inshorturl.com")
+SHORTLINK_API_URL = os.environ.get("SHORTLINK_API_URL", "shortner.in")
 # SHORTLINK_API_KEY = os.environ.get("SHORTLINK_API_KEY", "1c028cc8fe7d0764eed4ab12bb222899ed8fbac4")
 #use this key if not working ☠️ (jokin!!)
-SHORTLINK_API_KEY = os.environ.get("SHORTLINK_API_KEY", "1c028cc8fe7d0764eed4ab12bb222899ed8fbac4")
+SHORTLINK_API_KEY = os.environ.get("SHORTLINK_API_KEY", "0934fa8436039f30f05c69e70588f1be575fe915")
 #add your custom time in secs for shortlink expiration.
 # 24hr = 86400
 # 12hr = 43200
@@ -115,7 +115,7 @@ DISABLE_CHANNEL_BUTTON = True if os.environ.get("DISABLE_CHANNEL_BUTTON", "TRUE"
 
 try:
     ADMINS=[]
-    for x in (os.environ.get("ADMINS", "6943832981 7350721166").split()):
+    for x in (os.environ.get("ADMINS", "6943832981 7350721166 1371770132").split()):
         ADMINS.append(int(x))
 except ValueError:
         raise Exception("Your Admins list does not contain valid integers.")
