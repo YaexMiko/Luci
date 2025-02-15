@@ -12,7 +12,7 @@ from logging.handlers import RotatingFileHandler
 
 #force user to join your backup channel leave 0 if you don't need.
 FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1002480510185"))
-FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "-1002199469764"))
+FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "-1002283746321"))
 
 if FORCE_SUB_CHANNEL > FORCE_SUB_CHANNEL2:
     temp = FORCE_SUB_CHANNEL2 
@@ -61,10 +61,10 @@ https://dashboard.shareus.io/
 # TRUE for yes FALSE if no 
 USE_SHORTLINK = True if os.environ.get('USE_SHORTLINK', "TRUE") == "TRUE" else False 
 # only shareus service known rightnow rest you can test on your own
-SHORTLINK_API_URL = os.environ.get("SHORTLINK_API_URL", "shortner.in")
+SHORTLINK_API_URL = os.environ.get("SHORTLINK_API_URL", "Urlwala.com")
 # SHORTLINK_API_KEY = os.environ.get("SHORTLINK_API_KEY", "1c028cc8fe7d0764eed4ab12bb222899ed8fbac4")
 #use this key if not working ☠️ (jokin!!)
-SHORTLINK_API_KEY = os.environ.get("SHORTLINK_API_KEY", "0934fa8436039f30f05c69e70588f1be575fe915")
+SHORTLINK_API_KEY = os.environ.get("SHORTLINK_API_KEY", "6671a911b9453d80bff14951c83d4eb499724204")
 #add your custom time in secs for shortlink expiration.
 # 24hr = 86400
 # 12hr = 43200
