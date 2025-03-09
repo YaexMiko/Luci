@@ -77,8 +77,8 @@ async def start_command(client: Client, message: Message):
                 await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
             except:
                 pass
-        await message.reply_text(f"<b>‼️ Forward the Files to Saved Messages or somewhere else before Downloading it.\n\nIt will get Delete after 1 Hour ‼️</b>")
-        await message.reply_text(f"<b>Join @Animes_Empire for More ⚡ </b>")
+        await message.reply_text(f"<b><bold>➥ ᴛʜɪs ᴍᴀssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴀᴛᴇᴅ ɪɴ 1 ʜᴏᴜʀs.</bold></b>")
+        await message.reply_text(f"<b><bold>➥ ᴛᴇᴀᴍ ᴡᴀʀʟᴏʀᴅs</bold></b>")
         return
     else:
         reply_markup = InlineKeyboardMarkup(
@@ -117,30 +117,30 @@ async def not_joined(client: Client, message: Message):
     buttons = []
     if sub1 and not sub2 and not sub3:
         # User subscribed to 1, show buttons for 2 and 3
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink2)])
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink3)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink2)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3)])
     elif sub2 and not sub1 and not sub3:
         # User subscribed to 2, show buttons for 1 and 3
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink)])
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink3)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3)])
     elif sub3 and not sub1 and not sub2:
         # User subscribed to 3, show buttons for 1 and 2
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink)])
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink2)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink2)])
     elif not sub1 and not sub2 and not sub3:
         # User subscribed to none, show all three buttons
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink)])
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink2)])
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink3)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink2)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3)])
     elif sub1 and sub2 and not sub3:
         # User subscribed to 1 and 2, show button for 3
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink3)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3)])
     elif sub1 and sub3 and not sub2:
         # User subscribed to 1 and 3, show button for 2
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink2)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink2)])
     elif sub2 and sub3 and not sub1:
         # User subscribed to 2 and 3, show button for 1
-        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink)])
+        buttons.append([InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink)])
     elif sub1 and sub2 and sub3:
         # All subscriptions satisfied, no join buttons
         pass
