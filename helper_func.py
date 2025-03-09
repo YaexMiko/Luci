@@ -1,27 +1,34 @@
+#(©)Javpostr made by @rohit_1888
 import base64
 import re
 import asyncio
-import time
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from config import FORCE_SUB_CHANNEL, FORCE_SUB_CHANNEL2, ADMINS
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait
-from shortzy import Shortzy
-from database.database import user_data, db_verify_status, db_update_verify_status
+from config import JOIN_REQS_DB
+from config import JOIN_REQS_DB2
+from database.join_reqs import JoinReqs
+from database.join_reqs2 import JoinReqs2
 
+db = JoinReqs
+db2 = JoinReqs2
 
-async def is_subscribed(filter, client, update):
+async def is_subscribed1(filter, client, update):
     if not FORCE_SUB_CHANNEL:
         return True
     user_id = update.from_user.id
+    user = await db().get_user(update.from_user.id)
     if user_id in ADMINS:
+        return True
+    if user and user["user_id"] == update.from_user.id:
         return True
     try:
         member = await client.get_chat_member(chat_id = FORCE_SUB_CHANNEL, user_id = user_id)
     except UserNotParticipant:
         return False
-
+        
     if not member.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.MEMBER]:
         return False
     else:
@@ -31,17 +38,21 @@ async def is_subscribed2(filter, client, update):
     if not FORCE_SUB_CHANNEL2:
         return True
     user_id = update.from_user.id
+    user = await db2().get_user(update.from_user.id)
     if user_id in ADMINS:
+        return True
+    if user and user["user_id"] == update.from_user.id:
         return True
     try:
         member = await client.get_chat_member(chat_id = FORCE_SUB_CHANNEL2, user_id = user_id)
     except UserNotParticipant:
         return False
-
+        
     if not member.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.MEMBER]:
         return False
     else:
         return True
+
 
 async def encode(string):
     string_bytes = string.encode("ascii")
@@ -50,12 +61,12 @@ async def encode(string):
     return base64_string
 
 async def decode(base64_string):
-    base64_string = base64_string.strip("=") 
+    base64_string = base64_string.strip("=") # links generated before this commit will be having = sign, hence stri>
     base64_bytes = (base64_string + "=" * (-len(base64_string) % 4)).encode("ascii")
-    string_bytes = base64.urlsafe_b64decode(base64_bytes) 
+    string_bytes = base64.urlsafe_b64decode(base64_bytes)
     string = string_bytes.decode("ascii")
     return string
-
+    
 async def get_messages(client, message_ids):
     messages = []
     total_messages = 0
@@ -72,7 +83,7 @@ async def get_messages(client, message_ids):
                 chat_id=client.db_channel.id,
                 message_ids=temb_ids
             )
-        except:
+         except:
             pass
         total_messages += len(temb_ids)
         messages.extend(msgs)
@@ -87,7 +98,7 @@ async def get_message_id(client, message):
     elif message.forward_sender_name:
         return 0
     elif message.text:
-        pattern = r"https://t.me/(?:c/)?(.*)/(\d+)"
+        pattern = "https://t.me/(?:c/)?(.*)/(\d+)"
         matches = re.match(pattern,message.text)
         if not matches:
             return 0
@@ -124,45 +135,6 @@ def get_readable_time(seconds: int) -> str:
     up_time += ":".join(time_list)
     return up_time
 
-async def get_verify_status(user_id):
-    verify = await db_verify_status(user_id)
-    return verify
 
-async def update_verify_status(user_id, verify_token="", is_verified=False, verified_time=0, link=""):
-    current = await db_verify_status(user_id)
-    current['verify_token'] = verify_token
-    current['is_verified'] = is_verified
-    current['verified_time'] = verified_time
-    current['link'] = link
-    await db_update_verify_status(user_id, current)
-
-
-async def get_shortlink(url, api, link):
-    shortzy = Shortzy(api_key=api, base_site=url)
-    link = await shortzy.convert(link)
-    return link
-
-def get_exp_time(seconds):
-    periods = [('days', 86400), ('hours', 3600), ('mins', 60), ('secs', 1)]
-    result = ''
-    for period_name, period_seconds in periods:
-        if seconds >= period_seconds:
-            period_value, seconds = divmod(seconds, period_seconds)
-            result += f'{int(period_value)} {period_name}'
-    return result
-
-async def increasepremtime(user_id : int, timeforprem : int):
-    if timeforprem == 1: 
-        realtime = 86400*7
-    elif timeforprem == 2:
-        realtime = 86400*31
-    elif timeforprem == 3:
-        realtime = 86400*31*3
-    elif timeforprem == 4:
-        realtime = 86400*31*6
-    elif timeforprem == 5:
-        realtime = 86400*31*12
-    await update_verify_status(user_id, is_verified=True, verified_time=time.time()+realtime)
-
-subscribed = filters.create(is_subscribed)
+subscribed1 = filters.create(is_subscribed1)
 subscribed2 = filters.create(is_subscribed2)
