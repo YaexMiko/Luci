@@ -1,10 +1,9 @@
-#(©)Javpostr made by @rohit_1888
-
 from bot import Bot
 from pyrogram.types import Message
 from pyrogram import filters
-from config import ADMINS, BOT_STATS_TEXT, USER_REPLY_TEXT
+from config import ADMINS, BOT_STATS_TEXT, USER_REPLY_TEXT, START_PIC
 from datetime import datetime
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from helper_func import get_readable_time
 
 @Bot.on_message(filters.command('stats') & filters.user(ADMINS))
@@ -15,7 +14,29 @@ async def stats(bot: Bot, message: Message):
     await message.reply(BOT_STATS_TEXT.format(uptime=time))
 
 
-@Bot.on_message(filters.private)
-async def useless(_,message: Message):
+@Bot.on_message(filters.private & filters.incoming)
+async def useless(_, message: Message):
     if USER_REPLY_TEXT:
-        await message.reply(USER_REPLY_TEXT)
+        # Inline keyboard buttons
+        buttons = [
+            [
+                InlineKeyboardButton("ᴏɴɢᴏɪɴɢ ᴀɴɪᴍᴇ", url="https://t.me/+8iM2xyeUtGs4ZGYy"),
+                InlineKeyboardButton("ғɪɴɪsʜᴇᴅ ᴀɴɪᴍᴇ", url="https://t.me/+ZKIwRNkT8go5YWI1"),
+            ],
+            [
+                InlineKeyboardButton("ᴏɴɢᴏɪɴɢ ᴀɴɪᴍᴇ", url="https://t.me/+8iM2xyeUtGs4ZGYy"),
+                InlineKeyboardButton("ғɪɴɪsʜᴇᴅ ᴀɴɪᴍᴇ", url="https://t.me/+ZKIwRNkT8go5YWI1"),
+            ],
+        ]
+        # Check if START_PIC is set
+        if START_PIC:
+            await message.reply_photo(
+                photo=START_PIC,
+                caption=USER_REPLY_TEXT,
+                reply_markup=InlineKeyboardMarkup(buttons),
+            )
+        else:
+            await message.reply(
+                text=USER_REPLY_TEXT,
+                reply_markup=InlineKeyboardMarkup(buttons),
+            )
