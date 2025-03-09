@@ -1,45 +1,27 @@
-#(©)Javpostr made by @rohit_1888
-
-
+# (©) CodeXBotz
 import pymongo
+import os
 from config import DB_URI, DB_NAME
-import asyncio
 
-
-# Initialize MongoDB client
 dbclient = pymongo.MongoClient(DB_URI)
 database = dbclient[DB_NAME]
 user_data = database['users']
 
-async def add_user(user_id: int):
-    try:
-        user_data.insert_one({'_id': user_id})
-    except Exception as e:
-        print(f"Error adding user {user_id}: {e}")
-        
 async def present_user(user_id: int):
-    try:
-        found = user_data.find_one({'_id': user_id})
-        return bool(found)
-    except Exception as e:
-        print(f"Error finding user {user_id}: {e}")
-        return False
+    found = user_data.find_one({'_id': user_id})
+    return bool(found)
+
+async def add_user(user_id: int):
+    user_data.insert_one({'_id': user_id})
+    return
 
 async def full_userbase():
-    try:
-        user_docs = user_data.find()
-        user_ids = [doc['_id'] for doc in user_docs]
-        return user_ids
-    except Exception as e:
-        print(f"Error retrieving user base: {e}")
-        return []
-        
+    user_docs = user_data.find()
+    user_ids = []
+    for doc in user_docs:
+        user_ids.append(doc['_id'])
+    return user_ids
+
 async def del_user(user_id: int):
-    try:
-        result = user_data.delete_one({'_id': user_id})
-        if result.deleted_count:
-            print(f"User {user_id} deleted.")
-        else:
-            print(f"User {user_id} not found.")
-    except Exception as e:
-        print(f"Error deleting user {user_id}: {e}")
+    user_data.delete_one({'_id': user_id})
+    return
