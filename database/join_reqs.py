@@ -1,4 +1,4 @@
-# (©)Javpostr made by @rohit_1888
+# (©) Javpostr made by @rohit_1888
 import motor.motor_asyncio
 from config import FORCE_SUB_CHANNEL
 
@@ -22,13 +22,7 @@ class JoinReqs:
 
     async def add_user(self, user_id, first_name, username, date):
         try:
-            await self.col.insert_one({
-                "_id": int(user_id),
-                "user_id": int(user_id),
-                "first_name": first_name,
-                "username": username,
-                "date": date
-            })
+            await self.col.insert_one({"_id": int(user_id), "user_id": int(user_id), "first_name": first_name, "username": username, "date": date})
         except:
             pass
 
