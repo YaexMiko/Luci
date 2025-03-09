@@ -1,23 +1,19 @@
-#(©)CodeXBotz
 import os
 import asyncio
-from pyrogram import Client, filters, __version__
-from pyrogram.enums import ParseMode, ChatMemberStatus
+from pyrogram import Client, filters
+from pyrogram.enums import ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
+from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 from bot import Bot
 from config import ADMINS, OWNER_ID, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT
-from helper_func import subscribed1, subscribed2, encode, decode, get_messages
+from helper_func import *
 from database.database import add_user, del_user, full_userbase, present_user
 
 async def delete_after_delay(message: Message, delay):
     await asyncio.sleep(1800)
     await message.delete()
 
-import pyrogram.utils
-pyrogram.utils.MIN_CHANNEL_ID = -1009147483647
-
-@Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2)
+@Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3)
 async def start_command(client: Client, message: Message):
     id = message.from_user.id
     if not await present_user(id):
@@ -54,17 +50,16 @@ async def start_command(client: Client, message: Message):
                 ids = [int(int(argument[1]) / abs(client.db_channel.id))]
             except:
                 return
-        temp_msg = await message.reply("Please wait...⚡")
+        temp_msg = await message.reply("Please wait...⚡ ")
         try:
             messages = await get_messages(client, ids)
         except:
             await message.reply_text("𝚂𝚘𝚖𝚎𝚝𝚑𝚒𝚗𝚐 𝚠𝚎𝚗𝚝 𝚠𝚛𝚘𝚗𝚐..!")
             return
         await temp_msg.delete()
-
         for msg in messages:
             if bool(CUSTOM_CAPTION) & bool(msg.document):
-                caption = CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, filename=msg.document.file_name)
+                caption = CUSTOM_CAPTION.format(previouscaption = "" if not msg.caption else msg.caption.html, filename = msg.document.file_name)
             else:
                 caption = "" if not msg.caption else msg.caption.html
             if DISABLE_CHANNEL_BUTTON:
@@ -82,47 +77,73 @@ async def start_command(client: Client, message: Message):
                 await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
             except:
                 pass
-        await message.reply_text("<b>‼️ Forward the Files to Saved Messages or somewhere else before Downloading it.\n\nIt will get Delete after 1 Hour ‼️</b>")
-        await message.reply_text("<b>Join @Animes_Empire for More ⚡</b>")
+        await message.reply_text(f"<b>‼️ Forward the Files to Saved Messages or somewhere else before Downloading it.\n\nIt will get Delete after 1 Hour ‼️</b>")
+        await message.reply_text(f"<b>Join @Animes_Empire for More ⚡ </b>")
         return
     else:
         reply_markup = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("About Me", callback_data="about"),
-                    InlineKeyboardButton("Close", callback_data="close")
+                    InlineKeyboardButton("About Me", callback_data = "about"),
+                    InlineKeyboardButton("Close", callback_data = "close")
                 ]
             ]
         )
         await message.reply_text(
-            text=START_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
+            text = START_MSG.format(
+                first = message.from_user.first_name,
+                last = message.from_user.last_name,
+                username = None if not message.from_user.username else '@' + message.from_user.username,
+                mention = message.from_user.mention,
+                id = message.from_user.id
             ),
-            reply_markup=reply_markup,
-            disable_web_page_preview=True,
-            quote=True
+            reply_markup = reply_markup,
+            disable_web_page_preview = True,
+            quote = True
         )
         return
 
-#=====================================================================================##
-WAIT_MSG = """<b>Processing ....</b>"""
-REPLY_ERROR = """<code>Use this command as a reply to any telegram message with out any spaces.</code>"""
-#=====================================================================================##
-
+# =====================================================================================##
+WAIT_MSG = "<b>Working....</b>"
+REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
+# =====================================================================================##
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
-    buttons = [
-        [
-            InlineKeyboardButton(text="⚡ Join Channel ⚡", url=client.invitelink),
-        ],
-        [
-            InlineKeyboardButton(text="⚡ Join Channel ⚡", url=client.invitelink2),
-        ]
-    ]
+    user_id = message.from_user.id
+    # Check subscription status
+    sub1 = await is_subscribed1(None, client, message)
+    sub2 = await is_subscribed2(None, client, message)
+    sub3 = await is_subscribed3(None, client, message)
+    buttons = []
+    if sub1 and not sub2 and not sub3:
+        # User subscribed to 1, show buttons for 2 and 3
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink2)])
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink3)])
+    elif sub2 and not sub1 and not sub3:
+        # User subscribed to 2, show buttons for 1 and 3
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink)])
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink3)])
+    elif sub3 and not sub1 and not sub2:
+        # User subscribed to 3, show buttons for 1 and 2
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink)])
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink2)])
+    elif not sub1 and not sub2 and not sub3:
+        # User subscribed to none, show all three buttons
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink)])
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink2)])
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink3)])
+    elif sub1 and sub2 and not sub3:
+        # User subscribed to 1 and 2, show button for 3
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink3)])
+    elif sub1 and sub3 and not sub2:
+        # User subscribed to 1 and 3, show button for 2
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink2)])
+    elif sub2 and sub3 and not sub1:
+        # User subscribed to 2 and 3, show button for 1
+        buttons.append([InlineKeyboardButton(text="⚡  Join Channel ⚡ ", url=client.invitelink)])
+    elif sub1 and sub2 and sub3:
+        # All subscriptions satisfied, no join buttons
+        pass
     try:
         buttons.append(
             [
@@ -135,16 +156,16 @@ async def not_joined(client: Client, message: Message):
     except IndexError:
         pass
     await message.reply(
-        text=FORCE_MSG.format(
-            first=message.from_user.first_name,
-            last=message.from_user.last_name,
-            username=None if not message.from_user.username else '@' + message.from_user.username,
-            mention=message.from_user.mention,
-            id=message.from_user.id
-        ),
-        reply_markup=InlineKeyboardMarkup(buttons),
-        quote=True,
-        disable_web_page_preview=True
+        text = FORCE_MSG.format(
+                first = message.from_user.first_name,
+                last = message.from_user.last_name,
+                username = None if not message.from_user.username else '@' + message.from_user.username,
+                mention = message.from_user.mention,
+                id = message.from_user.id
+            ),
+        reply_markup = InlineKeyboardMarkup(buttons),
+        quote = True,
+        disable_web_page_preview = True
     )
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
@@ -163,7 +184,8 @@ async def send_text(client: Bot, message: Message):
         blocked = 0
         deleted = 0
         unsuccessful = 0
-        pls_wait = await message.reply("<i>Broadcast ho rha till then FUCK OFF</i>")
+
+        pls_wait = await message.reply("<i>ʙʀᴏᴀᴅᴄᴀꜱᴛ ᴘʀᴏᴄᴇꜱꜱɪɴɢ....</i>")
         for chat_id in query:
             try:
                 await broadcast_msg.copy(chat_id)
@@ -182,7 +204,7 @@ async def send_text(client: Bot, message: Message):
                 unsuccessful += 1
                 pass
             total += 1
-        status = f"""<b><u>Broadcast Completed</u>
+        status = f"""<b><u>ʙʀᴏᴀᴅᴄᴀꜱᴛ...</u>
 Total Users: <code>{total}</code>
 Successful: <code>{successful}</code>
 Blocked Users: <code>{blocked}</code>
@@ -190,4 +212,6 @@ Deleted Accounts: <code>{deleted}</code>
 Unsuccessful: <code>{unsuccessful}</code></b>"""
         return await pls_wait.edit(status)
     else:
-        aqua = 21
+        msg = await message.reply(REPLY_ERROR)
+        await asyncio.sleep(8)
+        await msg.delete()
