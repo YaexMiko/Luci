@@ -4,7 +4,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 # Bot token @Botfather
-TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "7742055464:AAGt6gEbZWNbFZ2OrfWTitxmFI9MC-4ywYM")
+TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "5768949686:AAG7E5FjrUnL99EMfN5dFu5ssPsWYM31y0k")
 
 # Your API ID from my.telegram.org
 APP_ID = int(os.environ.get("APP_ID", "19863702"))
@@ -13,13 +13,13 @@ APP_ID = int(os.environ.get("APP_ID", "19863702"))
 API_HASH = os.environ.get("API_HASH", "6d48cb362a97a43cfc944fd5c0f917f9")
 
 # Your db channel Id
-CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1002186827595"))
+CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1002601056342"))
 
 # OWNER ID
-OWNER_ID = int(os.environ.get("OWNER_ID", "7512463676"))
+OWNER_ID = int(os.environ.get("OWNER_ID", "917790252"))
 
 # Port
-PORT = os.environ.get("PORT", "8112")
+PORT = os.environ.get("PORT", "8222")
 
 # Database URL
 DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://Bewafa:aloksingh@cluster0.qsrsu.mongodb.net/?retryWrites=true&w=majority")
@@ -32,9 +32,9 @@ JOIN_REQS_DB = environ.get("JOIN_REQS_DB", DB_URI)
 JOIN_REQS_DB2 = environ.get("JOIN_REQS_DB2", DB_URI)
 
 # Force sub channel id, if you want to enable force sub
-FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "0"))
-FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCESUB_CHANNEL2", "0"))
-FORCE_SUB_CHANNEL3 = int(os.environ.get("FORCESUB_CHANNEL3", "0"))
+FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1002390467697"))
+FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCESUB_CHANNEL2", "-1002327327171"))
+FORCE_SUB_CHANNEL3 = int(os.environ.get("FORCESUB_CHANNEL3", "-1002288525306"))
 
 # Bot workers
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
@@ -45,7 +45,7 @@ START_MSG = os.environ.get("START_MESSAGE", "<b>𝙷𝚎𝚕𝚕𝚘 {first}\n\n
 # Admins list
 try:
     ADMINS = [7533047591]
-    for x in (os.environ.get("ADMINS", "7350721166").split()):
+    for x in (os.environ.get("ADMINS", "6615142034 7207533746").split()):
         ADMINS.append(int(x))
 except ValueError:
     raise Exception("Your Admins list does not contain valid integers.")
